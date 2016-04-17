@@ -37,7 +37,21 @@ public class ApiVerticle extends AbstractVerticle {
 
   private void handleLoginRequest(RoutingContext ctx) {
     JsonObject loginRequest = ctx.getBodyAsJson();
-    vertx.eventBus().send("", "");
+
+    vertx.eventBus().<JsonObject>send("user.auth", loginRequest, authReply -> {
+      if (authReply.succeeded()) {
+        JsonObject user = authReply.result().body();
+        String userId = user.getString("id");
+        vertx.eventBus().send("user.settings", userId, settingsReply -> {
+          JsonObject response = new JsonObject()
+              .put("token", "a-dummy-token")
+              .put("settings", settingsReply.result().body());
+          ctx.response().end(response.encode());
+        });
+      } else {
+        vertx.setTimer(1000, timerId -> ctx.response().setStatusCode(404).end());
+      }
+    });
   }
 
 }
