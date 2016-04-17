@@ -17,6 +17,10 @@ Each exercise is described by its test class:
 
   - Java 8
   - Maven 3
+  
+## Useful docs:
+  - [Vert.x core manual](http://vertx.io/docs/vertx-core/java/)
+  - [Vert.x-Web manual](http://vertx.io/docs/vertx-web/java/)
 
    
  
