@@ -6,7 +6,7 @@ public class GreeterVerticle extends AbstractVerticle {
 
   @Override
   public void start() throws Exception {
-    vertx.eventBus().<String>consumer("echo.greet", message -> {
+    vertx.eventBus().<String>consumer("greet.echo", message -> {
 
     });
   }

@@ -4,6 +4,8 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class HttpServerVerticle extends AbstractVerticle {
 
@@ -14,10 +16,15 @@ public class HttpServerVerticle extends AbstractVerticle {
         .setPort(8080);
 
     HttpServer server = vertx.createHttpServer(options);
+    Router router = Router.router(vertx);
+    router.route().handler(BodyHandler.create());
+    /*
+    router.get("/path").handler(routingContext -> {
 
-    server.requestHandler(request -> {
+    });
+    */
 
-    }).listen(result -> {
+    server.requestHandler(router::accept).listen(result -> {
       if (result.succeeded()) {
         System.out.println("Server started");
         startFuture.complete();

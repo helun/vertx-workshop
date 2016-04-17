@@ -11,11 +11,16 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class GreeterTest {
 
+  /**
+   * The class GreeterVerticle is already defined.
+   * Make the tests pass by implement missing functionality in se.cygni.vertx.lab1.GreeterVerticle
+   */
+
   Vertx vertx = Vertx.vertx();
 
   @Before
   public void setUp(TestContext ctx) throws Exception {
-    vertx.deployVerticle("java:se.cygni.vertx.lab1.GreeterVerticle", ctx.asyncAssertSuccess());
+    vertx.deployVerticle("se.cygni.vertx.lab1.GreeterVerticle", ctx.asyncAssertSuccess());
   }
 
   /**
@@ -44,25 +49,23 @@ public class GreeterTest {
    */
   @Test
   public void sharedDataGreet(TestContext ctx) throws Exception {
-    // Specifies that two countdowns should happen before the async is complete.
-    Async async = ctx.async(2);
 
     vertx.sharedData().getLocalMap("shared-data").put("greetformat", "Hola %s!");
 
-    vertx.eventBus().<String>send("greet.shared-data", "Mundo", response -> {
-      ctx.assertTrue(response.succeeded(), "Got no response");
-      ctx.assertEquals("Hola Mundo!", response.result().body());
-      async.countDown();
-    });
+    sendAndAssertReply("Mundo", "Hola Mundo!", ctx);
 
     vertx.sharedData().getLocalMap("shared-data").put("greetformat", "Bonjour %s!");
 
-    vertx.eventBus().<String>send("greet.shared-data", "le monde", response -> {
-      ctx.assertTrue(response.succeeded(), "Got no response");
-      ctx.assertEquals("Bonjour le monde!", response.result().body());
-      async.countDown();
-    });
+    sendAndAssertReply("le monde", "Bonjour le monde!", ctx);
+  }
 
+  private void sendAndAssertReply(String message, String expectedReply, TestContext ctx) {
+    Async async = ctx.async();
+    vertx.eventBus().<String>send("greet.shared-data", message, response -> {
+      ctx.assertTrue(response.succeeded(), "Got no response");
+      ctx.assertEquals(expectedReply, response.result().body());
+      async.complete();
+    });
     async.await();
   }
 }

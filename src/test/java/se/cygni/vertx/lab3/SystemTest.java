@@ -13,6 +13,43 @@ public class SystemTest {
   /**
    * Implement a user login service with an REST API:
    *
+   * You should use two services that are already implemented:
+   * AuthenticationVerticle
+   * SettingsVerticle
+   *
+   * Remember to deploy the verticles!
+   *
+   * AUTHENTICATION:
+   *
+   * Eventbus address: "user.auth"
+   * Request format (JsonObject):
+   * {
+   *   "username":"the username",
+   *   "password":"the password"
+   * }
+   *
+   * Successful response:
+   * {
+   *   "id": "the user id",
+   *   "username": "the username"
+   * }
+   *
+   * Failed authentication:
+   * The message will fail with code 404.
+   *
+   * USER SETTINGS:
+   * Eventbus address: "user.settings"
+   *
+   * Request format (String):
+   * user id
+   *
+   * Successful response:
+   * A json object with all settings
+   *
+   * API SPECIFICATION:
+   *
+   * The application should expose a login endpoint on port 8080.
+   *
    * POST /login
    * Body: see loginRequest below
    *

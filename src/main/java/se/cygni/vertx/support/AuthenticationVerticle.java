@@ -12,10 +12,12 @@ public class AuthenticationVerticle extends AbstractVerticle {
   static {
     users.put("player_one", new JsonObject()
         .put("id", "player_one_id")
+        .put("username", "player_one")
         .put("password", "pwd_one")
     );
     users.put("player_two", new JsonObject()
         .put("id", "player_two_id")
+        .put("username", "player_two")
         .put("password", "pwd_two")
     );
   }
