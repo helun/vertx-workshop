@@ -24,14 +24,14 @@ public class SystemTest {
    * Eventbus address: "user.auth"
    * Request format (JsonObject):
    * {
-   *   "username":"the username",
-   *   "password":"the password"
+   * "username":"the username",
+   * "password":"the password"
    * }
    *
    * Successful response:
    * {
-   *   "id": "the user id",
-   *   "username": "the username"
+   * "id": "the user id",
+   * "username": "the username"
    * }
    *
    * Failed authentication:
@@ -51,13 +51,13 @@ public class SystemTest {
    * The application should expose a login endpoint on port 8080.
    *
    * POST /login
-   * Body: see loginRequest below
+   * Body: see the loginRequest field below
    *
    * Expected response on successful login:
    * 200 OK
    * content-type: application/json
    *
-   * Body: see expectedLoginResponse below
+   * Body: see the expectedLoginResponse field below
    *
    * Expected response on failed login:
    * 404 Not found
@@ -73,7 +73,6 @@ public class SystemTest {
    * Bonus Exercise 2:
    * Reimplement your system in RX-Java style.
    * Start by extending io.vertx.rxjava.core.AbstractVerticle and use Observables instead of callbacks.
-   *
    */
 
 
