@@ -63,6 +63,7 @@ public class SystemTest {
    * 404 Not found
    *
    * The response should be delayed for one second if the login fails.
+   * Hint: vertx.setTimer(delay, Handler<Long> handler);
    *
    * Bonus Exercise 1:
    * Increase the response delay if consecutive login requests fails for the same user.
