@@ -32,6 +32,9 @@ public class HttpServerTest {
   @Before
   public void setUp(TestContext ctx) throws Exception {
     vertx.deployVerticle("se.cygni.vertx.lab2.HttpServerVerticle", ctx.asyncAssertSuccess());
+    client = vertx.createHttpClient(new HttpClientOptions()
+                                        .setDefaultHost(HOST)
+                                        .setDefaultPort(PORT));
   }
 
   @After
@@ -42,14 +45,16 @@ public class HttpServerTest {
   @Test (timeout = 1000)
   public void testGet(TestContext ctx) throws Exception {
     Async async = ctx.async();
-    client.getNow("/hello", response -> {
-      ctx.assertEquals(200, response.statusCode(), "request should respond with http status 200 OK");
-      response.bodyHandler(body -> {
-        JsonObject responseJson = body.toJsonObject();
-        ctx.assertEquals("Hello World", responseJson.getString("greet"));
-        async.complete();
-      });
-    });
+
+    client.get("/hello")
+          .handler(response -> {
+            ctx.assertEquals(200, response.statusCode(), "request should respond with http status 200 OK");
+            response.bodyHandler(body -> {
+              JsonObject responseJson = body.toJsonObject();
+              ctx.assertEquals("Hello World", responseJson.getString("greet"));
+              async.complete();
+            }).exceptionHandler(ctx::fail);
+          }).exceptionHandler(ctx::fail);
     async.await();
   }
 
@@ -67,10 +72,12 @@ public class HttpServerTest {
         JsonObject responseJson = body.toJsonObject();
         ctx.assertEquals(greet, responseJson.getString("greet"));
         async.complete();
-      });
+      }).exceptionHandler(ctx::fail);
+      ;
     }).putHeader("content-type", "application/json")
-      .putHeader("content-length", Integer.toString(postBody.length()))
-      .end(postBody);
+          .putHeader("content-length", Integer.toString(postBody.length()))
+          .exceptionHandler(ctx::fail)
+          .end(postBody);
 
     async.await();
   }
